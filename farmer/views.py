@@ -19,6 +19,6 @@ def index(request):
         
         print(converted_data)
 
-        farmer_obj = Farmer.objects.create(image=uploaded_image)
+        farmer_obj = Farmer.objects.create(image=uploaded_image,**converted_data)
 
     return render(request, 'index.html')
