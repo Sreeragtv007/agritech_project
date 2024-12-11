@@ -11,7 +11,6 @@ def ocr_converter(text):
         elif "Elevation" in item:
             info_dict['elevation'] = item.split(":")[1].strip()
         elif "Longitude:" in item:
-
             info_dict['longitude'] = item.split(":")[1].strip()
         elif "Accuracy:" in item:
             info_dict['accuracy'] = item.split(":")[1].strip()
