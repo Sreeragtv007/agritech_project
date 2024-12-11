@@ -1,10 +1,13 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>OCR Upload</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h2>Upload Image for OCR</h2>
+    <h2 class='register'>Upload Image for OCR</h2>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="image" required><br><br>
