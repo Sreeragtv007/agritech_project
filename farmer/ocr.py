@@ -1,17 +1,17 @@
 
 
-
-
 def ocr_converter(text):
     new_list = text.strip().split("\n")
     data = [item for item in new_list if item.strip()]
     info_dict = {}
 
-
     for item in data:
-        if "latitude:" in item:
-            info_dict['latitude'] = item.split(":")[1].strip(",")
+        if "Latitude:" in item:
+            info_dict['latitude'] = item.split(":")[1].strip()
+        elif "Elevation" in item:
+            info_dict['elevation'] = item.split(":")[1].strip()
         elif "Longitude:" in item:
+
             info_dict['longitude'] = item.split(":")[1].strip()
         elif "Accuracy:" in item:
             info_dict['accuracy'] = item.split(":")[1].strip()
@@ -27,5 +27,5 @@ def ocr_converter(text):
             info_dict['farmer_name'] = item.split(":")[1].strip()
         elif "Crop Name:" in item:
             info_dict['crop_name'] = item.split(":")[1].strip()
-            
+
     return info_dict
