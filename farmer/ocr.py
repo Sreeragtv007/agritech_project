@@ -9,9 +9,8 @@ def ocr_converter(text):
 
 
     for item in data:
-        # Handle some common known patterns in the strings
         if "latitude:" in item:
-            info_dict['latitude'] = item.split(":")[1].strip()
+            info_dict['latitude'] = item.split(":")[1].strip(",")
         elif "Longitude:" in item:
             info_dict['longitude'] = item.split(":")[1].strip()
         elif "Accuracy:" in item:
