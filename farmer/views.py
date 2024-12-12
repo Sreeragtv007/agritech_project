@@ -1,18 +1,75 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 import pytesseract
 from PIL import Image
 from .models import Farmerdata, Uploadedimage
 from .ocr import ocr_converter
 import cv2
+from django.contrib.auth.models import User
+from django.contrib.auth import login,logout
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 # Create your views here.
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
+def registerUser(request):
+    if request.method == 'POST':
+        
+        
 
-def register(request):
+        username = request.POST['username']
+        password = request.POST['password']
+        confirm = request.POST['confirm']
+        
+        
+        print(username,password)
+
+        if User.objects.filter(username=username).exists():
+
+            messages.error(request, "user name already taken")
+            return redirect('register')
+        if password != confirm:
+            messages.error(request, "Passwords do not match.")
+            return redirect('register')
+
+        user = User.objects.create(
+            username=username, password=password)
+
+        login(request, user)
+
+        messages.error(request, "login sucessfully")
+
+        return redirect('index')
+
+    return render(request, 'register.html')
+
+
+def loginUser(request):
+    if request.method == 'POST':
+
+        username = username = request.POST['username']
+        password = username = request.POST['password']
+        
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+                login(request, user) 
+                messages.success(request, "Login successful!")
+                return redirect('index') 
+
+    return render(request, 'login.html')
+
+
+def logoutUser(request):
+    
+    logout(request)
+    
+    messages.success(request,"logout sucessfully")
+    return redirect('login')
     
     
-    return render(request,'register.html')
+
 
 def index(request):
 
@@ -35,13 +92,13 @@ def index(request):
 
         print("_______________________________________")
         converted_data = ocr_converter(text)
-        
-        
-        if len(converted_data) > 4 :
+
+        if len(converted_data) > 4:
             print("image not clear")
         else:
-            
-            farmer_obj = Farmerdata.objects.create(image=image_obj,**converted_data)
+
+            farmer_obj = Farmerdata.objects.create(
+                image=image_obj, **converted_data)
 
         return render(request, 'index.html')
     else:
