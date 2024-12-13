@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -47,16 +49,25 @@ def registerUser(request):
 def loginUser(request):
     if request.method == 'POST':
 
-        username = username = request.POST['username']
-        password = username = request.POST['password']
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        print(username,password)
         
         
         user = authenticate(request, username=username, password=password)
+        
+        print(user)
         
         if user is not None:
                 login(request, user) 
                 messages.success(request, "Login successful!")
                 return redirect('index') 
+        else:
+            
+            messages.error(request,"credential not valid")
+            
+            return redirect('login')
 
     return render(request, 'login.html')
 
@@ -70,11 +81,20 @@ def logoutUser(request):
     
     
 
+@login_required(login_url='login')
+def home(request):
+    
+    obj = Farmerdata.objects.all()
+    
+    
+    context = {'obj':obj}
 
-def index(request):
+    if request.method == "POST":
+        uploaded_image = request.FILES["images"]   
+        print(uploaded_image)
+        return HttpResponse ('test')
+        print(uploaded_image)
 
-    if request.method == 'POST' and request.FILES['image']:
-        uploaded_image = request.FILES['image']
         # image = Image.open(uploaded_image)
         image_obj = Uploadedimage.objects.create(
             image=uploaded_image, user=request.user)
@@ -93,13 +113,17 @@ def index(request):
         print("_______________________________________")
         converted_data = ocr_converter(text)
 
-        if len(converted_data) > 4:
-            print("image not clear")
-        else:
+        
 
-            farmer_obj = Farmerdata.objects.create(
+        farmer_obj = Farmerdata.objects.create(
                 image=image_obj, **converted_data)
 
-        return render(request, 'index.html')
+        return render(request, 'home.html')
     else:
-        return render(request, 'index.html')
+        return render(request, 'home.html',context)
+
+
+
+def index(request):
+    
+    return render(request,'index.html')
