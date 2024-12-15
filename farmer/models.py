@@ -16,6 +16,7 @@ class Farmerdata(models.Model):
     farmername =models.CharField(max_length=50,blank=True, null=True)
     cropname = models.CharField(blank=True, null=True,max_length=50)
     image = models.OneToOneField('Uploadedimage',on_delete=models.CASCADE,blank=True, null=True)
+    time_stamb=models.DateTimeField(auto_now_add=True,blank=True, null=True)
     
     
 class Uploadedimage(models.Model):

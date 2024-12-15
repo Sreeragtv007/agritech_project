@@ -7,6 +7,7 @@ from PIL import Image
 from .models import Farmerdata, Uploadedimage
 from .ocr import ocr_converter
 import cv2
+
 import numpy as np
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
@@ -96,41 +97,33 @@ def home(request):
         uploaded_image = request.FILES['images']
         image_obj = Uploadedimage.objects.create(
             image=uploaded_image, user=request.user)
-        image = Image.open(image_obj.image)
-        text = pytesseract.image_to_string(image, lang='eng')
 
-        print("text data")
-        print(text.lower().strip())
+        image = Image.open(image_obj.image.path)
 
-        print("-------------------")
+        text = pytesseract.image_to_string(image, lang="eng")
+
+        converted_data = ocr_converter(text.lower())
         
-        
-        converted_data = ocr_converter(text.lower().strip())
-
         print(converted_data)
-        # return render(request,"home.html")
-
+        if converted_data == False:
+            messages.error(request,"invalid geotaged image")
+            return render(request,"home.html",context)
+        try:
+        
+            farmer_obj = Farmerdata.objects.create(image=image_obj,**converted_data)
+        except Exception as e:
+            messages.error(request,"invalid geotaged image")
+            print(e)
+        finally:
+            obj = Farmerdata.objects.all()
+            context = {'obj': obj}
+            return render(request,"home.html",context)
         
         
-
-        farmer_obj = Farmerdata.objects.create(image=image_obj,
-        **converted_data)
-        obj = Farmerdata.objects.all()
-        context={"obj":obj}
-
-        return render(request, "home.html",context)
-    return render(request, "home.html",context)
-
-    # views.py
-
-
-def check_task_status(request, task_id):
-    task_result = AsyncResult(task_id)
-    if task_result.ready():
-        return JsonResponse({"status": "completed", "result": task_result.result})
     else:
-        return JsonResponse({"status": "processing"})
+        return render(request,"home.html",context)
 
+        
 
 def index(request):
 

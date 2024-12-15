@@ -29,9 +29,9 @@
     {% for i in obj %}
     <div class="col-lg-3  d-flex justify-content-cente m-2" >
       <div class="card shadow">
-        <img src="{{ i.image.image.url }}" class="card-img-top p-2" alt="{{ i.title }}"  style="width: 200px; height: 200px; object-fit: cover;" >
+        <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="{{ i.title }}"  >
         <div class="card-body">
-          <h5 class="card-title">{{ i.title }}</h5>
+          <h5 class="card-title">{{ i.farmername}}</h5>
           <p class="card-text">{{ i.description }}</p>
           <a href="{{ i.link }}" class="btn btn-primary">Go somewhere</a>
         </div>
