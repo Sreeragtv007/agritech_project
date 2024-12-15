@@ -2,32 +2,47 @@
 
 
 {% block home %}
-<div class="container d-flex justify-content-center m-3" style="height: 15vh">
-  <div class="p-3 border bg-light shadow">
+
+
+<div class="container d-flex justify-content-center m-3 " style="height: 15vh">
+  
+
+  <div class="p-3 border bg-light shadow ">
     <div class="">
-      <form action="{% url 'home' %}" method="POST"> {% csrf_token %}
+
+
+      {% include "message.html" %}
+      <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <div class="input">
           <input type="file" class="mb-3" name="images" />
 
-          <input type="submit" class="m-4" />
+          <input type="submit" class="" />
         </div>
       </form>
     </div>
   </div>
 </div>
 
-{% for i in obj  %}
-  
-<div class="card m-5 shadow" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+<div class="container d-flex justify-content-center align-items-center">
+  <div class="row d-flex justify-content-cente">
+    {% for i in obj %}
+    <div class="col-lg-3  d-flex justify-content-cente m-2" >
+      <div class="card shadow">
+        <img src="{{ i.image.image.url }}" class="card-img-top p-2" alt="{{ i.title }}"  style="width: 200px; height: 200px; object-fit: cover;" >
+        <div class="card-body">
+          <h5 class="card-title">{{ i.title }}</h5>
+          <p class="card-text">{{ i.description }}</p>
+          <a href="{{ i.link }}" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>
 
-{% endfor %}
+
+
 
 
 

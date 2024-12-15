@@ -12,9 +12,9 @@ class Farmerdata(models.Model):
     azimuth = models.CharField(blank=True, null=True,max_length=50)
     pitch = models.CharField(blank=True, null=True,max_length=50)
     time = models.CharField(max_length=50,blank=True, null=True)
-    farmer_id = models.IntegerField(blank=True, null=True)
-    farmer_name =models.CharField(max_length=50,blank=True, null=True)
-    crop_name = models.CharField(blank=True, null=True,max_length=50)
+    farmerid = models.CharField(max_length=50,blank=True, null=True)
+    farmername =models.CharField(max_length=50,blank=True, null=True)
+    cropname = models.CharField(blank=True, null=True,max_length=50)
     image = models.OneToOneField('Uploadedimage',on_delete=models.CASCADE,blank=True, null=True)
     
     
