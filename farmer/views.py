@@ -1,25 +1,19 @@
-from celery.result import AsyncResult
-from django.http import JsonResponse
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render, get_object_or_404, redirect
+
+from django.shortcuts import render, redirect
 import pytesseract
 from PIL import Image
 from .models import Farmerdata, Uploadedimage
 from .ocr import ocr_converter
-import cv2
-import json
-import numpy as np
+
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializer import farmerSerializer
 
-from .task import ocr_task
 
 # Create your views here.
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -89,20 +83,10 @@ def logoutUser(request):
 
 @login_required(login_url='login')
 def home(request):
-    locations = Farmerdata.objects.values('id', 'latitude', 'longitude')
-    
-    # Serialize data into JSON format
-    context = {'locations': json.dumps(list(locations))}
-    # return render(request, 'home.html', context)
 
     obj = Farmerdata.objects.all()
-    locations = Farmerdata.objects.values('id', 'farmername', 'latitude', 'longitude')
-    
-    # Serialize data into JSON format
-    context = {'locations': json.dumps(list(locations)),'obj':obj}
-    
-    
-    
+
+    context = {'obj': obj}
 
     context = {'obj': obj}
     if request.method == 'POST' and request.FILES['images']:
@@ -115,43 +99,39 @@ def home(request):
         text = pytesseract.image_to_string(image, lang="eng")
 
         converted_data = ocr_converter(text.lower())
-        
+
         print(converted_data)
         if converted_data == False:
-            messages.error(request,"invalid geotaged image")
-            return render(request,"home.html",context)
+            messages.error(request, "invalid geotaged image")
+            return render(request, "home.html", context)
         try:
-        
-            farmer_obj = Farmerdata.objects.create(image=image_obj,**converted_data)
+
+            farmer_obj = Farmerdata.objects.create(
+                image=image_obj, **converted_data)
         except Exception as e:
-            messages.error(request,"invalid geotaged image")
+            messages.error(request, "invalid geotaged image")
             print(e)
         finally:
             obj = Farmerdata.objects.all()
             context = {'obj': obj}
-            return render(request,"home.html",context)
-        
-        
+            return render(request, "home.html", context)
+
     else:
-        return render(request,"home.html",context)
-
-        
+        return render(request, "home.html", context)
 
 
-def detail(request,pk):
-    
+def detail(request, pk):
+
     obj = Farmerdata.objects.get(id=pk)
-    
-    context = {"obj":obj}
-    
-    return render(request,"detail.html",context)
 
+    context = {"obj": obj}
 
+    return render(request, "detail.html", context)
 
 
 @api_view(['GET'])
 def mapapi(request):
     obj = Farmerdata.objects.all()
-    
-    serializer = farmerSerializer(obj,many=True)
+
+    serializer = farmerSerializer(obj, many=True)
     return Response(serializer.data)
