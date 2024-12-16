@@ -19,6 +19,9 @@ class Farmerdata(models.Model):
     time_stamb=models.DateTimeField(auto_now_add=True,blank=True, null=True)
     
     
+    def __str__(self):
+        return self.farmername
+    
 class Uploadedimage(models.Model):
     image = models.ImageField(upload_to='image',blank=True, null=True)
     user = models.ForeignKey(User,blank=True, null=True,on_delete=models.CASCADE)
