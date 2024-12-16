@@ -4,6 +4,9 @@
 {% block home %}
 
 
+<h1>Geolocation Map</h1>
+<div id="map"></div>
+
 <div class="container d-flex justify-content-center m-3 " style="height: 15vh">
   
 
@@ -24,22 +27,52 @@
 </div>
 
 
-<div class="container d-flex justify-content-center align-items-center">
-  <div class="row d-flex justify-content-cente">
+<div class="container ">
+  <div class="row">
     {% for i in obj %}
-    <div class="col-lg-3  d-flex justify-content-cente m-2" >
+    <div class="col-lg-3 d-flex justify-content-cente " >
       <div class="card shadow">
-        <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="{{ i.title }}"  >
+        <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="image not found"  >
         <div class="card-body">
-          <h5 class="card-title">{{ i.farmername}}</h5>
-          <p class="card-text">{{ i.description }}</p>
-          <a href="{{ i.link }}" class="btn btn-primary">Go somewhere</a>
+          <p class="card-title"> farmer name :{{ i.farmername}}</p>
+          <p class="card-text"> crop name: {{ i.cropname }}</p>
+          <a href="{% url 'detail' i.id %}" class="">show more</a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+
+
+
+
+
+
+
+  
+<script>
+  // Initialize the map
+  const map = L.map('map').setView([20.5937, 78.9629], 5); // Example center (India)
+
+  // Add a tile layer (background map)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Fetch data from the API
+  fetch('apimap/')
+      .then(response => response.json())
+      .then(locations => {
+          // Add markers for each location
+          locations.forEach(location => {
+              L.marker([location.latitude, location.longitude])
+                  .addTo(map)
+                  .bindPopup(`<b>${location.farmername}</b>`);
+          });
+      })
+      .catch(error => console.error('Error fetching locations:', error));
+</script>
 
 
 

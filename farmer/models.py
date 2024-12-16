@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 
 class Farmerdata(models.Model):
     
-    latitude = models.DecimalField(max_digits=9,decimal_places=6,blank=True, null=True)
-    longitude = models.DecimalField(max_digits=9,decimal_places=6,blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     elevation = models.CharField(max_length=50,blank=True, null=True)
     accuracy =models.CharField(max_length=50,blank=True, null=True)
     azimuth = models.CharField(blank=True, null=True,max_length=50)

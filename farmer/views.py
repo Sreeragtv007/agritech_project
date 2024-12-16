@@ -7,7 +7,7 @@ from PIL import Image
 from .models import Farmerdata, Uploadedimage
 from .ocr import ocr_converter
 import cv2
-
+import json
 import numpy as np
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
@@ -15,7 +15,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializer import farmerSerializer
 
 from .task import ocr_task
 
@@ -87,10 +89,20 @@ def logoutUser(request):
 
 @login_required(login_url='login')
 def home(request):
-
-    print("1")
+    locations = Farmerdata.objects.values('id', 'latitude', 'longitude')
+    
+    # Serialize data into JSON format
+    context = {'locations': json.dumps(list(locations))}
+    # return render(request, 'home.html', context)
 
     obj = Farmerdata.objects.all()
+    locations = Farmerdata.objects.values('id', 'farmername', 'latitude', 'longitude')
+    
+    # Serialize data into JSON format
+    context = {'locations': json.dumps(list(locations)),'obj':obj}
+    
+    
+    
 
     context = {'obj': obj}
     if request.method == 'POST' and request.FILES['images']:
@@ -125,6 +137,21 @@ def home(request):
 
         
 
-def index(request):
 
-    return render(request, 'home.html')
+def detail(request,pk):
+    
+    obj = Farmerdata.objects.get(id=pk)
+    
+    context = {"obj":obj}
+    
+    return render(request,"detail.html",context)
+
+
+
+
+@api_view(['GET'])
+def mapapi(request):
+    obj = Farmerdata.objects.all()
+    
+    serializer = farmerSerializer(obj,many=True)
+    return Response(serializer.data)
