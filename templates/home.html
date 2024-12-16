@@ -4,35 +4,44 @@
 {% block home %}
 
 
-<h1>Geolocation Map</h1>
-<div id="map"></div>
 
-<div class="container d-flex justify-content-center m-3 " style="height: 15vh">
+
+
+<div class="container m-3 d-flex justify-content-center align-items-center ">
   
 
-  <div class="p-3 border bg-light shadow ">
-    <div class="">
+  <div class="p-3 border bg-light shadow col-md-3 ">
+    <div class="row d-flex">
 
 
       {% include "message.html" %}
       <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-        <div class="input">
-          <input type="file" class="mb-3" name="images" />
+        <div class="input ">
+          <input type="file" class="mb-2" name="images" />
 
-          <input type="submit" class="" />
+          <input type="submit" class="" / style="margin-left: 30%;">
         </div>
       </form>
     </div>
   </div>
 </div>
 
+<div class="col-md-5 m-3">
 
-<div class="container ">
-  <div class="row">
+
+  <div id="map"></div>
+
+</div>
+
+
+<div class="container d-flex ">
+  <div class="row ">
+
+    
     {% for i in obj %}
-    <div class="col-lg-3 d-flex justify-content-cente " >
-      <div class="card shadow">
-        <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="image not found"  >
+    <div class="col-md-2 d-flex justify-content-cente align-items-center m-2 " >
+      <div class="card shadow" style="width: 400px; height:300px">
+        <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="image not found" style="width: 400px; height:300px" >
         <div class="card-body">
           <p class="card-title"> farmer name :{{ i.farmername}}</p>
           <p class="card-text"> crop name: {{ i.cropname }}</p>
@@ -41,6 +50,13 @@
       </div>
     </div>
     {% endfor %}
+
+    
+
+
+  
+
+    </div>
   </div>
 </div>
 
@@ -53,12 +69,28 @@
   
 <script>
   // Initialize the map
-  const map = L.map('map').setView([20.5937, 78.9629], 5); // Example center (India)
+  const map = L.map('map').setView([20.5937, 78.9629], 5); 
+  
+
 
   // Add a tile layer (background map)
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors'
   }).addTo(map);
+
+
+   // Set the maximum bounds to keep the map focused on India
+   const indiaBounds = [
+   [6.4627, 68.1262],  // Southwest corner (Latitude, Longitude)
+   [37.0841, 97.3926]  // Northeast corner (Latitude, Longitude)
+];
+
+// Restrict the map to these bounds
+map.setMaxBounds(indiaBounds);
+
+// Optional: Limit the zoom levels to prevent zooming out beyond India
+map.options.maxZoom = 8;  // Set max zoom level
+map.options.minZoom = 5;  // Set min zoom level
 
   // Fetch data from the API
   fetch('apimap/')
@@ -68,10 +100,13 @@
           locations.forEach(location => {
               L.marker([location.latitude, location.longitude])
                   .addTo(map)
-                  .bindPopup(`<b>${location.farmername}</b>`);
+                  .bindPopup(`<b>farmer name: ${location.farmername}</b><br>
+                   <b>crop name: ${location.cropname}</b><br>`);
           });
       })
       .catch(error => console.error('Error fetching locations:', error));
+
+      
 </script>
 
 
