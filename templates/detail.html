@@ -10,11 +10,23 @@
       <h6>Farmer name : {{obj.farmername}}</h6>
 
       <br />
-
+      {% if obj.cropname %}
       <h6>Crop name : {{obj.cropname}}</h6>
-
+        {% endif %}
       <br />
       <h6>Uploaded by : {{obj.image.user}}</h6>
+        <br>
+        {% if obj.time_stamb %}
+        <h6>Uploaded date : {{obj.time_stamb}}</h6>
+
+        {% endif %}
+        <br>
+        {% if obj.time %}
+        <h6>image taken on  : {{obj.time}}</h6>
+
+        {% endif%}
+
+
     </div>
   </div>
 </div>

@@ -76,7 +76,10 @@
             </li>
             {% endif %}
           </ul>
+          {% if user.is_authenticated %}
           <h5>Halooo  {{user}}</h5>
+
+          {% endif %}
         </div>
       </div>
     </nav>

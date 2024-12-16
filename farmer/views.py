@@ -49,7 +49,7 @@ def registerUser(request):
 
         messages.error(request, "login sucessfully")
 
-        return redirect('index')
+        return redirect('login')
 
     return render(request, 'register.html')
 
@@ -69,12 +69,12 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             messages.success(request, "Login successful!")
-            return redirect('index')
+            return redirect('home')
         else:
 
             messages.error(request, "credential not valid")
 
-            return redirect('login')
+            return redirect('home')
 
     return render(request, 'login.html')
 

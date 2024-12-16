@@ -18,7 +18,8 @@ class Farmerdata(models.Model):
     image = models.OneToOneField('Uploadedimage',on_delete=models.CASCADE,blank=True, null=True)
     time_stamb=models.DateTimeField(auto_now_add=True,blank=True, null=True)
     
-    
+    class Meta:
+        ordering = ['-time_stamb']
     def __str__(self):
         return self.farmername
     
