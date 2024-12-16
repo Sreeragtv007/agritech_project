@@ -26,31 +26,40 @@
   </div>
 </div>
 
-<div class="col-md-5 m-3">
+<div class="container">
+  <div class="row">
+    <div class="col-md-5 m-3">
 
 
-  <div id="map"></div>
+      <div id="map"></div>
+    
+    </div>
 
+    
+  </div>
 </div>
 
 
-<div class="container d-flex ">
+<div class="container">
   <div class="row ">
 
-    
+   
+     
     {% for i in obj %}
-    <div class="col-md-2 d-flex justify-content-cente align-items-center m-2 " >
-      <div class="card shadow" style="width: 400px; height:300px">
+    <div class="col-md-3 d-flex justify-content-cente align-items-center m-2 " >
+      <div class="card shadow" style="width: 400px; height: 400px;">
         <img src="{{ i.image.image.url }}" class="img-fluid p-2" alt="image not found" style="width: 400px; height:300px" >
         <div class="card-body">
           <p class="card-title"> farmer name :{{ i.farmername}}</p>
           <p class="card-text"> crop name: {{ i.cropname }}</p>
+          <p>Uploaded by : {{i.image.user}}</p>
           <a href="{% url 'detail' i.id %}" class="">show more</a>
         </div>
       </div>
     </div>
     {% endfor %}
 
+   </a>
     
 
 
@@ -70,6 +79,8 @@
 <script>
   // Initialize the map
   const map = L.map('map').setView([20.5937, 78.9629], 5); 
+
+
   
 
 

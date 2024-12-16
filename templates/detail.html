@@ -1,32 +1,22 @@
-{% extends "index.html" %}
-
-
-
-{% block detail %}
-    
+{% extends "index.html" %} {% block detail %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-lg-3 " >
-
-            <div>
-                <img src="{{obj.image.image.url}}" alt="" style="height: 300px; " class="m-5">
-               
-            </div>
-            <h6>{{obj.farmername}}</h6>
-            <div class="m-5">
-
-                <div>
-                    
-                </div>
-
-            </div>
-
-
-        </div>
-
-           
+  <div class="row m-4">
+    <div class="card col-md-5 p-2 shadow">
+      <img src="{{obj.image.image.url}}" alt="" />
     </div>
+
+    <div class="card col-md-7 p-3">
+      <h6>Farmer name : {{obj.farmername}}</h6>
+
+      <br />
+
+      <h6>Crop name : {{obj.cropname}}</h6>
+
+      <br />
+      <h6>Uploaded by : {{obj.image.user}}</h6>
+    </div>
+  </div>
 </div>
+
 {% endblock detail %}
-    
