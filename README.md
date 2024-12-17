@@ -15,3 +15,10 @@ confirm installation using : tesseract --version
 finally run the following command : python manage.py makemigrations
                                     python manage.py migrate
                                     python manage.py  runserver
+
+
+
+
+
+
+if you faced any issue while configure the repository  feel free to contact me on sreeragtv009@gmail.com
