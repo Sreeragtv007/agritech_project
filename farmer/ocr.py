@@ -4,7 +4,7 @@ def ocr_converter(text):
     new_list = text.split("\n")
     data = [item for item in new_list if item.strip()]
 
-    print(data)
+    
 
     dict = {}
 

@@ -1,5 +1,5 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 import pytesseract
 from PIL import Image
 from .models import Farmerdata, Uploadedimage
@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from .serializer import farmerSerializer
 
 
-# Create your views here.
+# ocr tool config
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
@@ -25,8 +25,6 @@ def registerUser(request):
         username = request.POST['username']
         password = request.POST['password']
         confirm = request.POST['confirm']
-
-        print(username, password)
 
         if User.objects.filter(username=username).exists():
 
@@ -54,11 +52,7 @@ def loginUser(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        print(username, password)
-
         user = authenticate(request, username=username, password=password)
-
-        print(user)
 
         if user is not None:
             login(request, user)
@@ -91,16 +85,20 @@ def home(request):
     context = {'obj': obj}
     if request.method == 'POST' and request.FILES['images']:
         uploaded_image = request.FILES['images']
-        image_obj = Uploadedimage.objects.create(
-            image=uploaded_image, user=request.user)
+        
+        try:
+            image_obj = Uploadedimage.objects.create(
+                image=uploaded_image, user=request.user)
 
-        image = Image.open(image_obj.image.path)
+            image = Image.open(image_obj.image.path)
 
-        text = pytesseract.image_to_string(image, lang="eng")
+            text = pytesseract.image_to_string(image, lang="eng")
+        except:
+            messages.error(request,"unexpected error")
+            return render(request,"home.html",context)
 
         converted_data = ocr_converter(text.lower())
 
-        print(converted_data)
         if converted_data == False:
             messages.error(request, "invalid geotaged image")
             return render(request, "home.html", context)
@@ -122,7 +120,7 @@ def home(request):
 
 def detail(request, pk):
 
-    obj = Farmerdata.objects.get(id=pk)
+    obj = get_object_or_404(Farmerdata,id=pk)
 
     context = {"obj": obj}
 

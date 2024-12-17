@@ -160,4 +160,3 @@ MEDIA_URL = '/media/'
 
 
 
-# settings.py
