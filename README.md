@@ -1,4 +1,4 @@
-Clone the repository : git clone 
+Clone the repository : git clone https://github.com/Sreeragtv007/agritech_project.git
 
 Navigate to the project directory:  cd agritech_project/agritech
 
